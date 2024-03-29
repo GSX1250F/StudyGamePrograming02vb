@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class Game
     Inherits System.Windows.Forms.Form
 
-    'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()>
+    'フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
+    <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -14,42 +14,39 @@ Partial Class Game
         End Try
     End Sub
 
-    'Required by the Windows Form Designer
+    'Windows フォーム デザイナーで必要です。
     Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()>
+    'メモ: 以下のプロシージャは Windows フォーム デザイナーで必要です。
+    'Windows フォーム デザイナーを使用して変更できます。  
+    'コード エディターを使って変更しないでください。
+    <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        components = New ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Game))
         PictureBox = New PictureBox()
-        Timer1 = New Timer(components)
         CType(PictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' PictureBox
         ' 
-        resources.ApplyResources(PictureBox, "PictureBox")
         PictureBox.BackColor = SystemColors.ActiveCaptionText
+        PictureBox.ImeMode = ImeMode.NoControl
+        PictureBox.Location = New Point(-112, -159)
         PictureBox.Name = "PictureBox"
+        PictureBox.Size = New Size(1024, 768)
+        PictureBox.TabIndex = 1
         PictureBox.TabStop = False
-        ' 
-        ' Timer1
-        ' 
         ' 
         ' Game
         ' 
-        resources.ApplyResources(Me, "$this")
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
+        ClientSize = New Size(800, 450)
         Controls.Add(PictureBox)
         Name = "Game"
+        Text = "Game"
         CType(PictureBox, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub
 
     Friend WithEvents PictureBox As PictureBox
-    Friend WithEvents Timer1 As Timer
-
 End Class

@@ -1,15 +1,25 @@
-﻿Imports System.Numerics
-Imports System.Reflection.Metadata.Ecma335
-Imports System.Runtime.CompilerServices
+﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class Game
+    'VBではLoop処理中のイベント処理はやりにくい。
+    'イベントハンドラでProcessInputを実行
+    'TimerでUpdateGame・GenerateOutputを実行
+    'Public Sub RunLoop()
+    '   While mIsRunning       
+    '       ProcessInput()
+    '       UpdateGame()    
+    '       GenerateOutput()
+    '   End While
+    'End Sub
+
+    'ゲームウィンドウの大きさ
+    Public mWindowW As Integer
+    Public mWindowH As Integer
+    'TicksCountの一時保持用。
+    Public mTicksCountPre As Long
+
     'コンストラクタ
     Public Sub New()
-
-        ' この呼び出しはデザイナーで必要です。
-        InitializeComponent()
-
-        ' InitializeComponent() 呼び出しの後で初期化を追加します。
         'mWindow = nullptr
         'mRenderer = nullptr
         mIsRunning = True
@@ -17,14 +27,12 @@ Public Class Game
         mWindowW = 1024
         mWindowH = 768
         Dim success = Initialize()
-
     End Sub
 
     Public Function Initialize() As Boolean
         'フォームを表示させ、ストップウォッチを開始
         Me.StartPosition = FormStartPosition.Manual
         Me.Location = New Point(50, 50)
-
         canvas = New Bitmap(mWindowW, mWindowH)      'PictureBoxと同じ大きさの画像を作る
         graph = Graphics.FromImage(canvas)           '画像のGraphicsクラスを生成
 
@@ -37,22 +45,6 @@ Public Class Game
         Return True
 
     End Function
-    Private Sub Game_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        Initialize()
-    End Sub
-    'VBではLoop処理中のイベント処理はやりにくい。
-    'イベントハンドラでProcessInputを実行
-    'TimerでUpdateGame・GenerateOutputを実行
-    'Public Sub RunLoop()
-    '   While mIsRunning       
-    '       ProcessInput()
-    '       UpdateGame()    
-    '       GenerateOutput()
-    '   End While
-    'End Sub
-
-
     Public Sub AddActor(actor As Actor)
 
     End Sub
@@ -65,20 +57,12 @@ Public Class Game
     Public Sub RemoveSprite(spirite As SpriteComponent)
 
     End Sub
-
-    Public Function GetTexture(filename As String) As SDL_Texture
-
-    End Function
-
     Public Sub SetRunning(isrunning As Boolean)
         mIsRunning = isrunning
     End Sub
+    Public Function GetTexture(filename As String) As SDL_Texture
 
-    'ゲームウィンドウの大きさ
-    Public mWindowW As Integer
-    Public mWindowH As Integer
-    'TicksCountの一時保持用。
-    Public mTicksCountPre As Long
+    End Function
 
     'Game-specific
     Public Sub AddAsteroid(ast As Asteroid)
@@ -98,15 +82,10 @@ Public Class Game
         End If
 
         mUpdatingActors = True
-        For actor As Actor = mActors
-                actor.ProcessInput(keyState)
+        For Each actor In mActors
+            actor.ProcessInput(keyState)
         Next
         mUpdatingActors = False
-    End Sub
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        UpdateGame()
-        GenerateOutput()
-        mTicksCountPre = mTicksCount.ElapsedMilliseconds
     End Sub
     Private Sub UpdateGame()
         'デルタタイムの計算
@@ -114,28 +93,27 @@ Public Class Game
         'If deltatime > 0.05 Then deltatime = 0.05       'deltatime=0.05 ～　20fps
         'すべてのアクターを更新
         mUpdatingActors = True
-        For actor As Actor = 0 To mActors.Size()
+        For Each actor In mActors
             actor.Update(deltaTime)
         Next
         mUpdatingActors = False
         '待ちアクターをmActorsに移動
-        For pending As Actor = 0 To mPendingActors.Size()
+        For Each pending In mPendingActors
             mActors.Add(pending)
         Next
         mPendingActors.Clear()
         '死んだアクターを一時配列に追加
         Dim deadActors As List(Of Actor)
-        For actor As Actor = 0 To mActors.Size()
+        For Each actor In mActors
             If actor.GetState() = actor.EDead Then
                 deadActors.Add(actor)
             End If
         Next
         '死んだアクターを削除
-        For actor As Actor = 0 To deadActors.Size()
+        For Each actor In deadActors
+            actor.Finalize()
             Dispose(actor)
         Next
-
-
     End Sub
     Private Sub GenerateOutput()
         '画面のクリア
@@ -166,6 +144,16 @@ Public Class Game
     Private Sub UnloadData()
 
     End Sub
+    Private Sub Shutdown()
+        mTicksCount.Stop()
+        Me.Close()
+    End Sub
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        UpdateGame()
+        GenerateOutput()
+        mTicksCountPre = mTicksCount.ElapsedMilliseconds
+    End Sub
+
     'テクスチャの配列
     Private mTextures As Dictionary(Of String, SDL_Texture)
     'すべてのアクター
@@ -174,7 +162,6 @@ Public Class Game
     Private mPendingActors As List(Of Actor)
     'すべての描画されるスプライトコンポーネント
     Private mSprites As List(Of SpriteComponent)
-
     'Private mWindow As SDL_Window   C++のmWindowに相当するのはForm,PictureBox
     'Private mRenderer As SDL_Renderer    C++のRendererに相当するのはCanvas,Graphics
     Private canvas As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
@@ -186,13 +173,4 @@ Public Class Game
     'Game-specific
     Private mShip As Ship
     Private mAsteroids As List(Of Asteroid)
-
-
-
-
-    Private Sub Shutdown()
-        mTicksCount.Stop()
-        Me.Close()
-    End Sub
-
 End Class
