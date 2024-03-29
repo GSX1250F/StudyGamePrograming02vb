@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class Game
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -23,33 +23,33 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
-        PictureBox1 = New PictureBox()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Game))
+        PictureBox = New PictureBox()
         Timer1 = New Timer(components)
-        CType(PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
+        CType(PictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
-        ' PictureBox1
+        ' PictureBox
         ' 
-        PictureBox1.BackColor = SystemColors.ActiveCaptionText
-        PictureBox1.Location = New Point(0, 0)
-        PictureBox1.Name = "PictureBox1"
-        PictureBox1.Size = New Size(1024, 768)
-        PictureBox1.TabIndex = 0
-        PictureBox1.TabStop = False
+        resources.ApplyResources(PictureBox, "PictureBox")
+        PictureBox.BackColor = SystemColors.ActiveCaptionText
+        PictureBox.Name = "PictureBox"
+        PictureBox.TabStop = False
         ' 
-        ' Form1
+        ' Timer1
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        ' 
+        ' Game
+        ' 
+        resources.ApplyResources(Me, "$this")
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1034, 761)
-        Controls.Add(PictureBox1)
-        Name = "Form1"
-        Text = "Form1"
-        CType(PictureBox1, ComponentModel.ISupportInitialize).EndInit()
+        Controls.Add(PictureBox)
+        Name = "Game"
+        CType(PictureBox, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub
 
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox As PictureBox
     Friend WithEvents Timer1 As Timer
 
 End Class
