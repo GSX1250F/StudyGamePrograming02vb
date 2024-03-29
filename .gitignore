@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+*.vb
+/StudyGamePrograming02vb/Form1.Designer.vb
+/StudyGamePrograming02vb/Form1.resx
+/StudyGamePrograming02vb/Form1.vb
+/.gitignore
+/.gitignore
