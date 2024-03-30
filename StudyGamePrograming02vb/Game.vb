@@ -12,11 +12,30 @@ Public Class Game
     '   End While
     'End Sub
 
+    'Public
     'ゲームウィンドウの大きさ
     Public mWindowW As Integer
     Public mWindowH As Integer
     'TicksCountの一時保持用。
     Public mTicksCountPre As Long
+
+    'Private
+    'テクスチャの配列
+    Private mTextures As Dictionary(Of String, SDL_Texture)
+    'すべてのアクター
+    Private mActors As List(Of Actor)
+    'すべての待ちアクター
+    Private mPendingActors As List(Of Actor)
+    'すべての描画されるスプライトコンポーネント
+    Private mSprites As List(Of SpriteComponent)
+    'Private mWindow As SDL_Window   C++のmWindowに相当するのはForm,PictureBox
+    'Private mRenderer As SDL_Renderer    C++のRendererに相当するのはCanvas,Graphics
+    Private canvas As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
+    Private graph As Graphics      'ImageオブジェクトのGraphicsオブジェクトを作成する
+    'Private mTicksCount As Unit32       Stopwatchに相当？
+    Private mTicksCount As New System.Diagnostics.Stopwatch()
+    Private mIsRunning As Boolean
+    Private mUpdatingActors As Boolean
 
     'コンストラクタ
     Public Sub New()
@@ -27,6 +46,9 @@ Public Class Game
         mWindowW = 1024
         mWindowH = 768
         Dim success = Initialize()
+
+        'ここまででFormとPictureBoxが作成される。
+        'この後は、イベントハンドラでInput、TimerでUpdateとOutputが実行される。
     End Sub
 
     Public Function Initialize() As Boolean
@@ -45,14 +67,34 @@ Public Class Game
         Return True
 
     End Function
+
     Public Sub AddActor(actor As Actor)
-
+        If mUpdatingActors Then
+            mPendingActors.Add(actor)
+        Else
+            mActors.Add(actor)
+        End If
     End Sub
+
     Public Sub RemoveActor(actor As Actor)
-
+        Dim iter As Integer = mPendingActors.IndexOf(actor)
+        If iter >= 0 Then
+            mPendingActors.Remove(mPendingActors[iter])
+        End If
+        iter = mActors.IndexOf(actor)
+        If iter >= 0 Then
+            mPendingActors.Remove(iter)
+        End If
     End Sub
-    Public Sub AddSprite(spirite As SpriteComponent)
 
+    Public Sub AddSprite(sprite As SpriteComponent)
+        Dim myDrawOrder As Integer = sprite.mDrawOrder
+        For Each sp In mSprites
+            If myDrawOrder < sp.mDrawOrder Then
+                Exit For
+            End If
+        Next
+        mSprites.insert()
     End Sub
     Public Sub RemoveSprite(spirite As SpriteComponent)
 
@@ -75,6 +117,7 @@ Public Class Game
     Public mShip As Ship
 
     Private Sub ProcessInput(sender As Object, keyState As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
+        'Keyイベントハンドラ
         'ESCキーでゲーム終了
         If keyState.KeyCode = Keys.Escape Then
             mIsRunning = False
@@ -86,6 +129,7 @@ Public Class Game
         Next
         mUpdatingActors = False
     End Sub
+
     Private Sub UpdateGame()
         'デルタタイムの計算
         Dim deltaTime As Long = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
@@ -114,6 +158,7 @@ Public Class Game
             Dispose(actor)
         Next
     End Sub
+
     Private Sub GenerateOutput()
         '画面のクリア
         graph.Clear(Color.Black)
@@ -129,6 +174,7 @@ Public Class Game
         'PictureBoxに表示する
         PictureBox.Image = canvas
     End Sub
+
     Private Sub LoadData()
         'プレイヤーの宇宙船を作成
         Dim mShip As New Ship
@@ -140,34 +186,22 @@ Public Class Game
         Next
 
     End Sub
+
     Private Sub UnloadData()
 
     End Sub
+
     Private Sub Shutdown()
         mTicksCount.Stop()
         Me.Close()
     End Sub
+
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         UpdateGame()
         GenerateOutput()
         mTicksCountPre = mTicksCount.ElapsedMilliseconds
     End Sub
 
-    'テクスチャの配列
-    Private mTextures As Dictionary(Of String, SDL_Texture)
-    'すべてのアクター
-    Private mActors As List(Of Actor)
-    'すべての待ちアクター
-    Private mPendingActors As List(Of Actor)
-    'すべての描画されるスプライトコンポーネント
-    Private mSprites As List(Of SpriteComponent)
-    'Private mWindow As SDL_Window   C++のmWindowに相当するのはForm,PictureBox
-    'Private mRenderer As SDL_Renderer    C++のRendererに相当するのはCanvas,Graphics
-    Private canvas As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
-    Private graph As Graphics      'ImageオブジェクトのGraphicsオブジェクトを作成する
-    'Private mTicksCount As Unit32       Stopwatchに相当？
-    Private mTicksCount As New System.Diagnostics.Stopwatch()
-    Private mIsRunning As Boolean
-    Private mUpdatingActors As Boolean
+
 
 End Class
