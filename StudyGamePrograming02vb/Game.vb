@@ -79,11 +79,11 @@ Public Class Game
     Public Sub RemoveActor(actor As Actor)
         Dim iter As Integer = mPendingActors.IndexOf(actor)
         If iter >= 0 Then
-            mPendingActors.Remove(mPendingActors[iter])
+            mPendingActors.RemoveAt(iter)
         End If
         iter = mActors.IndexOf(actor)
         If iter >= 0 Then
-            mPendingActors.Remove(iter)
+            mPendingActors.RemoveAt(iter)
         End If
     End Sub
 
