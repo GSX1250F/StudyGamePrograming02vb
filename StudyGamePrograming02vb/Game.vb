@@ -71,9 +71,8 @@ Public Class Game
     Public Sub RemoveAsteroid(ast As Asteroid)
 
     End Sub
-    Public Function GetAsteroids() As List(Of Asteroid)()
-        Return mAsteroids
-    End Function
+    Public mAsteroids As List(Of Asteroid)
+    Public mShip As Ship
 
     Private Sub ProcessInput(sender As Object, keyState As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         'ESCキーでゲーム終了
@@ -170,7 +169,5 @@ Public Class Game
     Private mTicksCount As New System.Diagnostics.Stopwatch()
     Private mIsRunning As Boolean
     Private mUpdatingActors As Boolean
-    'Game-specific
-    Private mShip As Ship
-    Private mAsteroids As List(Of Asteroid)
+
 End Class
