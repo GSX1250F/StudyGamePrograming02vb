@@ -22,7 +22,9 @@ Partial Class Game
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        components = New ComponentModel.Container()
         PictureBox = New PictureBox()
+        Timer1 = New Timer(components)
         CType(PictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -49,4 +51,5 @@ Partial Class Game
     End Sub
 
     Friend WithEvents PictureBox As PictureBox
+    Friend WithEvents Timer1 As Timer
 End Class
