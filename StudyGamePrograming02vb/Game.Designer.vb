@@ -38,9 +38,12 @@ Partial Class Game
         PictureBox.TabIndex = 1
         PictureBox.TabStop = False
         ' 
+        ' Timer1
+        ' 
+        ' 
         ' Game
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(PictureBox)

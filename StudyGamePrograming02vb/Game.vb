@@ -21,13 +21,13 @@ Public Class Game
 
     'Private
     'ファイル名とテクスチャとのひもづけ配列
-    Private mTextures As Dictionary(Of String, Image)
+    Private mTextures As New Dictionary(Of String, Image)
     'すべてのアクター
-    Private mActors As List(Of Actor)
+    Private mActors As New List(Of Actor)
     'すべての待ちアクター
-    Private mPendingActors As List(Of Actor)
+    Private mPendingActors As New List(Of Actor)
     'すべての描画されるスプライトコンポーネント
-    Private mSprites As List(Of SpriteComponent)
+    Private mSprites As New List(Of SpriteComponent)
     'Private mWindow As SDL_Window   C++のmWindowに相当するのはForm,PictureBox
     'Private mRenderer As SDL_Renderer    C++のRendererに相当するのはCanvas,Graphics
     Private canvas As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
@@ -38,7 +38,7 @@ Public Class Game
     Private mUpdatingActors As Boolean
 
     'コンストラクタ
-    Public Sub New()
+    Public Sub Game_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'mWindow = nullptr
         'mRenderer = nullptr
         mIsRunning = True
@@ -61,14 +61,15 @@ Public Class Game
         LoadData()
 
         mTicksCount.Start()
-
+        Timer1.Interval = 20
+        Timer1.Enabled = True
         mTicksCountPre = mTicksCount.ElapsedMilliseconds
 
         Return True
 
     End Function
 
-    Public Sub AddActor(actor As Actor)
+    Public Sub AddActor(ByRef actor As Actor)
         If mUpdatingActors Then
             mPendingActors.Add(actor)
         Else
@@ -120,21 +121,21 @@ Public Class Game
             img = mTextures(filename)
         Else
             '画像ファイルを読み込んで、Imageオブジェクトを作成し、ファイル名と紐づけする
-            img = System.Drawing.Image.FromFile(filename)
+            img = Image.FromFile(Application.StartupPath & filename)
             mTextures.Add(filename, img)
         End If
         Return img
     End Function
 
     'Game-specific
-    Public Sub AddAsteroid(ByRef ast As Asteroid)
+    'Public Sub AddAsteroid(ByRef ast As Asteroid)
 
-    End Sub
-    Public Sub RemoveAsteroid(ByRef ast As Asteroid)
+    'End Sub
+    'Public Sub RemoveAsteroid(ByRef ast As Asteroid)
 
-    End Sub
-    Public mAsteroids As List(Of Asteroid)
-    Public mShip As Ship
+    'End Sub
+    'Public mAsteroids As List(Of Asteroid)
+    'Public mShip As Ship
 
     Private Sub ProcessInput(sender As Object, keyState As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         'Keyイベントハンドラ
@@ -166,7 +167,7 @@ Public Class Game
         Next
         mPendingActors.Clear()
         '死んだアクターを一時配列に追加
-        Dim deadActors As List(Of Actor)
+        Dim deadActors As New List(Of Actor)
         For Each actor In mActors
             If actor.mState = Actor.State.EDead Then
                 deadActors.Add(actor)
@@ -186,7 +187,7 @@ Public Class Game
 
         'すべてのスプライトコンポーネントを描画
         For Each sprite In mSprites
-            sprite.Draw(canvas)
+            sprite.Draw(graph)
         Next
 
         'バッファの交換・・・不要　PictureBoxはダブルバッファがデフォルトでオン。canvas→pictureboxでよい。
@@ -196,12 +197,12 @@ Public Class Game
 
     Private Sub LoadData()
         'プレイヤーの宇宙船を作成
-        Dim mShip As New Ship
+        Dim mShip As New Ship(Me)
 
         '小惑星を複数生成
         Dim numAsteroids As Integer = 20
         For i As Integer = 0 To numAsteroids - 1
-            Dim mAsteroid As New Asteroid
+            'Dim mAsteroid As New Asteroid
         Next
 
     End Sub
@@ -216,11 +217,13 @@ Public Class Game
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        UpdateGame()
-        GenerateOutput()
-        mTicksCountPre = mTicksCount.ElapsedMilliseconds
+        If mIsRunning Then
+            UpdateGame()
+            GenerateOutput()
+            mTicksCountPre = mTicksCount.ElapsedMilliseconds
+        Else
+            Shutdown()
+        End If
     End Sub
-
-
 
 End Class
