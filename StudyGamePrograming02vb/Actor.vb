@@ -22,7 +22,7 @@ Public Class Actor
 	End Sub
 
 	'ゲームから呼び出される更新関数(オーバーライド不可)
-	Public Sub Update(ByVal deltaTime As Double)
+	Public Sub Update(ByVal deltaTime As Single)
 		If mState = State.EActive Or mState = State.EPaused Then
 			mPosition += mVelocity * deltaTime
 			mRotation += mRotSpeed * deltaTime
@@ -31,13 +31,13 @@ Public Class Actor
 		End If
 	End Sub
 	'アクターが持つ全コンポーネントを更新(オーバーライド不可)
-	Public Sub UpdateComponents(ByVal deltaTime As Double)
+	Public Sub UpdateComponents(ByVal deltaTime As Single)
 		For Each comp In mComponents
 			comp.Update(deltaTime)
 		Next
 	End Sub
 	'アクター独自の更新処理(オーバーライド可能)
-	Public Overridable Sub UpdateActor(ByVal deltaTime As Double)
+	Public Overridable Sub UpdateActor(ByVal deltaTime As Single)
 	End Sub
 
 	'ゲームから呼び出されるProcess Input(オーバーライド不可)
@@ -59,12 +59,12 @@ Public Class Actor
 	' 移動
 	Public mPosition As Vector2        '位置
 	Public mVelocity As Vector2        '速度x,y
-	Public mScale As Double            '拡大率
-	Public mRotation As Double         '回転
-	Public mRotSpeed As Double         '回転速度
-	Public mMass As Double             '質量
-	Public mRadius As Double           '半径（拡大率は無視）
-	Public mImoment As Double          '慣性モーメント
+	Public mScale As Single            '拡大率
+	Public mRotation As Single         '回転
+	Public mRotSpeed As Single         '回転速度
+	Public mMass As Single             '質量
+	Public mRadius As Single           '半径（拡大率は無視）
+	Public mImoment As Single          '慣性モーメント
 	Public mComponents As New List(Of Component)
 	Public mGame As Game
 	Public Function GetForward() As Vector2

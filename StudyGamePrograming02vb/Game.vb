@@ -154,7 +154,7 @@ Public Class Game
 
     Private Sub UpdateGame()
         'デルタタイムの計算
-        Dim deltaTime As Double = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
+        Dim deltaTime As Single = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
         'If deltatime > 0.05 Then deltatime = 0.05       'deltatime=0.05 ～　20fps
         'すべてのアクターを更新
         mIsUpdatingActors = True

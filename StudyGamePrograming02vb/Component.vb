@@ -8,7 +8,7 @@
 
 
     ' 各コンポーネント更新（オーバーライド可能）
-    Public Overridable Sub Update(deltaTime As Double)
+    Public Overridable Sub Update(deltaTime As Single)
 
     End Sub
 

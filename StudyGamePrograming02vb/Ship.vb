@@ -19,7 +19,28 @@ Public Class Ship
         asc.SetAnimTextures(anims, True)
 
 
+
+	End Sub
+
+    Public Overrides Sub ActorInput(keyState As KeyEventArgs)
+        MyBase.ActorInput(keyState)
+        If keyState.KeyCode = Keys.Down Then
+            mRotation = -Math.PI / 2.0
+            mc.mForwardSpeed = 100
+        ElseIf keyState.KeyCode = Keys.UP Then
+            mRotation = (Math.PI / 2.0)
+            mc.mForwardSpeed = 100
+        ElseIf keyState.KeyCode = Keys.RIGHT Then
+            mRotation = 0.0
+            mc.mForwardSpeed = 100
+        ElseIf keyState.KeyCode = Keys.Left Then
+            mRotation = Math.PI
+            mc.mForwardSpeed = 100
+        Else
+            mc.mForwardSpeed = 0
+        End If
     End Sub
 
+	Public mc As New MoveComponent(Me, 20)
 
 End Class
