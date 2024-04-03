@@ -30,19 +30,19 @@ Public Class Game
     Private mSprites As New List(Of SpriteComponent)
     'Private mWindow As SDL_Window   C++のmWindowに相当するのはForm,PictureBox
     'Private mRenderer As SDL_Renderer    C++のRendererに相当するのはCanvas,Graphics
-    Private canvas As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
-    Private graph As Graphics      'ImageオブジェクトのGraphicsオブジェクトを作成する
+    Private mWindow As Bitmap      'PictureBoxに表示するためのBitmapオブジェクト作成
+    Private mRenderer As Graphics      'ImageオブジェクトのGraphicsオブジェクトを作成する
     'Private mTicksCount As Unit32       Stopwatchに相当？
     Private mTicksCount As New System.Diagnostics.Stopwatch()
     Private mIsRunning As Boolean
-    Private mUpdatingActors As Boolean
+    Private mIsUpdatingActors As Boolean
 
     'コンストラクタ
     Public Sub Game_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'mWindow = nullptr
         'mRenderer = nullptr
         mIsRunning = True
-        mUpdatingActors = False
+        mIsUpdatingActors = False
         mWindowW = 1024
         mWindowH = 768
         Dim success = Initialize()
@@ -55,8 +55,8 @@ Public Class Game
         'フォームを表示させ、ストップウォッチを開始
         Me.StartPosition = FormStartPosition.Manual
         Me.Location = New Point(50, 50)
-        canvas = New Bitmap(mWindowW, mWindowH)      'PictureBoxと同じ大きさの画像を作る
-        graph = Graphics.FromImage(canvas)           '画像のGraphicsクラスを生成
+        mWindow = New Bitmap(mWindowW, mWindowH)      'PictureBoxと同じ大きさの画像を作る
+        mRenderer = Graphics.FromImage(mWindow)           '画像のGraphicsクラスを生成
 
         LoadData()
 
@@ -70,7 +70,7 @@ Public Class Game
     End Function
 
     Public Sub AddActor(ByRef actor As Actor)
-        If mUpdatingActors Then
+        If mIsUpdatingActors Then
             mPendingActors.Add(actor)
         Else
             mActors.Add(actor)
@@ -114,17 +114,17 @@ Public Class Game
         mIsRunning = isrunning
     End Sub
     Public Function GetTexture(ByRef filename As String) As Image
-        Dim img As System.Drawing.Image = Nothing
+        Dim tex As System.Drawing.Image = Nothing
         Dim b As Boolean = mTextures.ContainsKey(filename)
         If b = True Then
             'すでに読み込み済み
-            img = mTextures(filename)
+            tex = mTextures(filename)
         Else
             '画像ファイルを読み込んで、Imageオブジェクトを作成し、ファイル名と紐づけする
-            img = Image.FromFile(Application.StartupPath & filename)
-            mTextures.Add(filename, img)
+            tex = Image.FromFile(Application.StartupPath & filename)
+            mTextures.Add(filename, tex)
         End If
-        Return img
+        Return tex
     End Function
 
     'Game-specific
@@ -144,11 +144,11 @@ Public Class Game
             mIsRunning = False
         End If
 
-        mUpdatingActors = True
+        mIsUpdatingActors = True
         For Each actor In mActors
             actor.ProcessInput(keyState)
         Next
-        mUpdatingActors = False
+        mIsUpdatingActors = False
     End Sub
 
     Private Sub UpdateGame()
@@ -156,11 +156,11 @@ Public Class Game
         Dim deltaTime As Long = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
         'If deltatime > 0.05 Then deltatime = 0.05       'deltatime=0.05 ～　20fps
         'すべてのアクターを更新
-        mUpdatingActors = True
+        mIsUpdatingActors = True
         For Each actor In mActors
             actor.Update(deltaTime)
         Next
-        mUpdatingActors = False
+        mIsUpdatingActors = False
         '待ちアクターをmActorsに移動
         For Each pending In mPendingActors
             mActors.Add(pending)
@@ -183,16 +183,16 @@ Public Class Game
 
     Private Sub GenerateOutput()
         '画面のクリア
-        graph.Clear(Color.Black)
+        mRenderer.Clear(Color.Black)
 
         'すべてのスプライトコンポーネントを描画
         For Each sprite In mSprites
-            sprite.Draw(graph)
+            sprite.Draw(mRenderer)
         Next
 
         'バッファの交換・・・不要　PictureBoxはダブルバッファがデフォルトでオン。canvas→pictureboxでよい。
         'PictureBoxに表示する
-        PictureBox.Image = canvas
+        PictureBox.Image = mWindow
     End Sub
 
     Private Sub LoadData()
