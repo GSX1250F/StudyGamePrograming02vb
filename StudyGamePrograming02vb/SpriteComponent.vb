@@ -19,7 +19,7 @@
             bmp = mTexture
             'mOwner.mRotationに対する回転処理が必要。。。。。
 
-            graph.DrawImage(mTexture, x, y)
+            graph.DrawImage(bmp, x, y)
         End If
 
     End Sub

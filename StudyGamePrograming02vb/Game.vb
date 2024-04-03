@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+﻿Imports System.Numerics
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class Game
     'VBではLoop処理中のイベント処理はやりにくい。
@@ -197,18 +198,25 @@ Public Class Game
 
     Private Sub LoadData()
         'プレイヤーの宇宙船を作成
-        Dim mShip As New Ship(Me)
+        Dim mShip As Ship = New Ship(Me)
+        mShip.mPosition.X = 100.0
+        mShip.mPosition.Y = 384.0
+        mShip.mScale = 1.5
 
         '小惑星を複数生成
-        Dim numAsteroids As Integer = 20
-        For i As Integer = 0 To numAsteroids - 1
-            'Dim mAsteroid As New Asteroid
-        Next
+        'Dim numAsteroids As Integer = 20
+        'For i As Integer = 0 To numAsteroids - 1
+        'Dim mAsteroid As New Asteroid
+        'Next
 
     End Sub
 
     Private Sub UnloadData()
+        While mActors.Count > 0
+            mActors.Remove(mActors.Last)
+        End While
 
+        mTextures.Clear()
     End Sub
 
     Private Sub Shutdown()

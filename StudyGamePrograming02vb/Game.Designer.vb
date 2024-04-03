@@ -32,7 +32,7 @@ Partial Class Game
         ' 
         PictureBox.BackColor = SystemColors.ActiveCaptionText
         PictureBox.ImeMode = ImeMode.NoControl
-        PictureBox.Location = New Point(-112, -159)
+        PictureBox.Location = New Point(0, 0)
         PictureBox.Name = "PictureBox"
         PictureBox.Size = New Size(1024, 768)
         PictureBox.TabIndex = 1
@@ -43,7 +43,7 @@ Partial Class Game
         ' 
         ' Game
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(PictureBox)
