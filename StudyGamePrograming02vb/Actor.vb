@@ -37,7 +37,7 @@ Public Class Actor
 		Next
 	End Sub
 	'アクター独自の更新処理(オーバーライド可能)
-	Public Sub UpdateActor(ByVal deltaTime As Double)
+	Public Overridable Sub UpdateActor(ByVal deltaTime As Double)
 	End Sub
 
 	'ゲームから呼び出されるProcess Input(オーバーライド不可)
@@ -50,7 +50,7 @@ Public Class Actor
 		ActorInput(keyState)
 	End Sub
 	'アクター独自の入力処理(オーバーライド可能)
-	Public Sub ActorInput(ByVal keyState As System.Windows.Forms.KeyEventArgs)
+	Public Overridable Sub ActorInput(ByVal keyState As System.Windows.Forms.KeyEventArgs)
 	End Sub
 
 	'Getters/setters	とりあえず無し。すべてPublic変数とする

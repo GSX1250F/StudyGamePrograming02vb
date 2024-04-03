@@ -6,12 +6,15 @@
         mOwner.AddComponent(Me)
     End Sub
 
-    Public Sub Update(ByVal deltaTime As Double)
-        ' 各コンポーネント更新（オーバーライド可能）
+
+    ' 各コンポーネント更新（オーバーライド可能）
+    Public Overridable Sub Update(deltaTime As Double)
+
     End Sub
 
-    Public Sub ProcessInput(ByVal keyState As System.Windows.Forms.KeyEventArgs)
-        ' 各コンポーネント入力処理（オーバーライド可能）
+    ' 各コンポーネント入力処理（オーバーライド可能）
+    Public Overridable Sub ProcessInput(ByVal keyState As System.Windows.Forms.KeyEventArgs)
+
     End Sub
 
     Public mOwner As Actor      '所有アクター

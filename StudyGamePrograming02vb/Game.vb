@@ -154,7 +154,7 @@ Public Class Game
 
     Private Sub UpdateGame()
         'デルタタイムの計算
-        Dim deltaTime As Long = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
+        Dim deltaTime As Double = (mTicksCount.ElapsedMilliseconds - mTicksCountPre) / 1000
         'If deltatime > 0.05 Then deltatime = 0.05       'deltatime=0.05 ～　20fps
         'すべてのアクターを更新
         mIsUpdatingActors = True
@@ -199,9 +199,9 @@ Public Class Game
     Private Sub LoadData()
         'プレイヤーの宇宙船を作成
         Dim mShip As Ship = New Ship(Me)
-        mShip.mPosition.X = 100.0
-        mShip.mPosition.Y = 384.0
-        mShip.mScale = 1.5
+        'mShip.mPosition.X = 100.0
+        'mShip.mPosition.Y = 384.0
+        'mShip.mScale = 1.5
 
         '小惑星を複数生成
         'Dim numAsteroids As Integer = 20

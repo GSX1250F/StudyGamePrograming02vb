@@ -45,7 +45,7 @@ Partial Class Game
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(800, 450)
+        ClientSize = New Size(1025, 770)
         Controls.Add(PictureBox)
         Name = "Game"
         Text = "Game"
