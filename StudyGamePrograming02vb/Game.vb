@@ -37,6 +37,7 @@ Public Class Game
     Private mTicksCount As New System.Diagnostics.Stopwatch()
     Private mIsRunning As Boolean
     Private mIsUpdatingActors As Boolean
+    Private mKeyInputs As New List(Of System.Windows.Forms.KeyEventArgs)    'キー入力の配列
 
     'コンストラクタ
     Public Sub Game_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -138,18 +139,34 @@ Public Class Game
     'Public mAsteroids As List(Of Asteroid)
     'Public mShip As Ship
 
-    Private Sub ProcessInput(sender As Object, keyState As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
+    Private Sub KeyState(sender As Object, keyState As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         'Keyイベントハンドラ
-        'ESCキーでゲーム終了
-        If keyState.KeyCode = Keys.Escape Then
-            mIsRunning = False
-        End If
+        'キーコードを配列に入れる。
+        mKeyInputs.Add(keyState)
+    End Sub
 
-        mIsUpdatingActors = True
-        For Each actor In mActors
-            actor.ProcessInput(keyState)
+    Private Sub ProcessInput()
+        'キーイベントが無かったときでも、Nothingを引数にして
+        'ActorとComponentのProcessInputを実行する
+        'そのとき、Nothingの処理を必ず行う。
+        If mKeyInputs.Count = 0 Then
+            mKeyInputs.Add(Nothing)
+        End If
+        For i As Integer = 0 To mKeyInputs.Count - 1
+            If Not mKeyInputs(i) Is Nothing Then
+                'ESCキーでゲーム終了
+                If mKeyInputs(i).KeyCode = Keys.Escape Then
+                    mIsRunning = False
+                End If
+            End If
+
+            mIsUpdatingActors = True
+            For Each actor In mActors
+                actor.ProcessInput(mKeyInputs(i))
+            Next
         Next
         mIsUpdatingActors = False
+        mKeyInputs.Clear()
     End Sub
 
     Private Sub UpdateGame()
@@ -226,6 +243,7 @@ Public Class Game
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If mIsRunning Then
+            ProcessInput()
             UpdateGame()
             GenerateOutput()
             mTicksCountPre = mTicksCount.ElapsedMilliseconds
