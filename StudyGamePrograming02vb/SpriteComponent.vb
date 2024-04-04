@@ -15,21 +15,32 @@ Public Class SpriteComponent
         If mOwner.mState <> Actor.State.EPaused Then
             Dim w = CInt(mTexWidth * mOwner.mScale)
             Dim h = CInt(mTexHeight * mOwner.mScale)
-            Dim x = CInt(mOwner.mPosition.X - w / 2)
-            Dim y = CInt(mOwner.mPosition.Y - h / 2)
+            'Dim x = CInt(mOwner.mPosition.X - w / 2)
+            'Dim y = CInt(mOwner.mPosition.Y - h / 2)
             Dim img As New Bitmap(w, h)
             img = mTexture
 
-            Dim d = mOwner.mRotation
             '新しい座標位置を計算する
-            Dim x1 As Single = x + w * CType(Math.Cos(-d), Single)
-            Dim y1 As Single = y + w * CType(Math.Sin(-d), Single)
-            Dim x2 As Single = x - h * CType(Math.Sin(-d), Single)
-            Dim y2 As Single = y + h * CType(Math.Cos(-d), Single)
-            'PointF配列を作成
-            Dim destinationPoints() As PointF = {New PointF(x, y),
-                    New PointF(x1, y1),
-                    New PointF(x2, y2)}
+            Dim x(3) As Single
+            Dim y(3) As Single
+            Dim x2(3) As Single
+            Dim y2(3) As Single
+            x(0) = mOwner.mPosition.X - w / 2
+            y(0) = mOwner.mPosition.Y - h / 2
+            x(1) = mOwner.mPosition.X + w / 2
+            y(1) = mOwner.mPosition.Y - h / 2
+            x(2) = mOwner.mPosition.X - w / 2
+            y(2) = mOwner.mPosition.Y + h / 2
+            For i = 0 To 2
+                x2(i) = (x(i) - mOwner.mPosition.X) * Math.Cos(mOwner.mRotation) + (y(i) - mOwner.mPosition.Y) * Math.Sin(mOwner.mRotation) + mOwner.mPosition.X
+                y2(i) = -(x(i) - mOwner.mPosition.X) * Math.Sin(mOwner.mRotation) + (y(i) - mOwner.mPosition.Y) * Math.Cos(mOwner.mRotation) + mOwner.mPosition.Y
+            Next
+
+            'Point配列を作成
+            Dim destinationPoints() As Point = {
+                New Point(CInt(x2(0)), CInt(y2(0))),
+                New Point(CInt(x2(1)), CInt(y2(1))),
+                New Point(CInt(x2(2)), CInt(y2(2)))}
 
             mRenderer.DrawImage(img, destinationPoints)
         End If
